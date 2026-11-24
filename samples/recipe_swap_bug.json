@@ -1,0 +1,17 @@
+{
+  "format": "supply-clean-recipe",
+  "version": 1,
+  "columns": [
+    {"name": "id",       "type": "int",  "min": 0, "max": 1000000000000000000, "nullable": false},
+    {"name": "age",      "type": "int",  "min": 0, "max": 130, "nullable": true},
+    {"name": "age_fix",  "type": "int",  "min": 0, "max": 130, "nullable": false}
+  ],
+  "input_contract": {"const": true},
+  "steps": [
+    {"kind": "set",  "id": "default_age", "when": {"is_null": "age"},
+     "target": "age", "value": 0},
+    {"kind": "copy", "id": "copy_age", "when": {"const": true},
+     "source": "age", "target": "age_fix"}
+  ],
+  "deliver": ["id", "age_fix"]
+}

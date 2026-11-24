@@ -1,0 +1,14 @@
+{
+  "format": "supply-clean-recipe",
+  "version": 1,
+  "columns": [
+    {"name": "src",  "type": "int", "min": 0, "max": 1000000000000000000, "nullable": false},
+    {"name": "sink", "type": "int", "min": 0, "max": 999, "nullable": false}
+  ],
+  "input_contract": {"const": true},
+  "steps": [
+    {"kind": "copy", "id": "copy_src_to_sink", "when": {"const": true}, "source": "src", "target": "sink"},
+    {"kind": "set",  "id": "clamp_src", "when": {"column": "src", "op": "gt", "value": 999}, "target": "src", "value": 999}
+  ],
+  "deliver": ["src", "sink"]
+}

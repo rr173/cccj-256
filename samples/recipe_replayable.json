@@ -1,0 +1,19 @@
+{
+  "format": "supply-clean-recipe",
+  "version": 1,
+  "columns": [
+    {"name": "id",     "type": "int",  "min": 0, "max": 1000000000000000000, "nullable": false},
+    {"name": "age",    "type": "int",  "min": 0, "max": 130, "nullable": true},
+    {"name": "status", "type": "enum", "values": ["new", "ok", "bad"], "nullable": true},
+    {"name": "flag",   "type": "enum", "values": ["new", "ok", "bad"], "nullable": true}
+  ],
+  "input_contract": {"all": [
+    {"column": "id", "op": "gt", "value": 100}
+  ]},
+  "steps": [
+    {"kind": "isolate", "id": "reject_bad", "when": {"column": "status", "op": "eq", "value": "bad"}, "reason": "bad_status"},
+    {"kind": "set",     "id": "set_flag", "when": {"column": "age", "op": "gt", "value": 60}, "target": "flag", "value": "ok"},
+    {"kind": "copy",    "id": "copy_flag", "when": {"is_null": "flag"}, "source": "status", "target": "flag"}
+  ],
+  "deliver": ["id", "status", "flag"]
+}

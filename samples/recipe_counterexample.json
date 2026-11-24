@@ -1,0 +1,15 @@
+{
+  "format": "supply-clean-recipe",
+  "version": 1,
+  "columns": [
+    {"name": "id",     "type": "int",  "min": 0, "max": 1000000000000000000, "nullable": false},
+    {"name": "age",    "type": "int",  "min": 0, "max": 130, "nullable": true},
+    {"name": "status", "type": "enum", "values": ["new", "ok", "bad"], "nullable": true}
+  ],
+  "input_contract": {"const": true},
+  "steps": [
+    {"kind": "isolate", "id": "iso_bad", "when": {"column": "status", "op": "eq", "value": "bad"}, "reason": "bad_status"},
+    {"kind": "set",     "id": "fix_status", "when": {"column": "age", "op": "gt", "value": 17}, "target": "status", "value": "ok"}
+  ],
+  "deliver": ["id", "status"]
+}

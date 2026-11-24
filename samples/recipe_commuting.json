@@ -1,0 +1,22 @@
+{
+  "format": "supply-clean-recipe",
+  "version": 1,
+  "columns": [
+    {"name": "id",     "type": "int",  "min": 0, "max": 1000000000000000000, "nullable": false},
+    {"name": "age",    "type": "int",  "min": 0, "max": 130, "nullable": true},
+    {"name": "region", "type": "enum", "values": ["EU", "US", "APAC"], "nullable": true},
+    {"name": "status", "type": "enum", "values": ["new", "ok", "bad"], "nullable": true}
+  ],
+  "input_contract": {"all": [
+    {"column": "id", "op": "ge", "value": 0},
+    {"any": [{"column": "region", "op": "eq", "value": "EU"},
+             {"column": "region", "op": "eq", "value": "US"},
+             {"column": "region", "op": "eq", "value": "APAC"}]}
+  ]},
+  "steps": [
+    {"kind": "isolate", "id": "iso_id0", "when": {"column": "id", "op": "eq", "value": 0}, "reason": "zero_id"},
+    {"kind": "set",     "id": "set_status", "when": {"column": "age", "op": "gt", "value": 17}, "target": "status", "value": "ok"},
+    {"kind": "set_null","id": "null_region", "when": {"is_null": "age"}, "target": "region"}
+  ],
+  "deliver": ["id", "age", "region", "status"]
+}
